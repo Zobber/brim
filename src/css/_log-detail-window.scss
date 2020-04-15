@@ -1,0 +1,25 @@
+#detail-root {
+  position: relative;
+  height: 100%;
+}
+
+.log-detail-window {
+
+
+  .log-detail-body {
+    color: $gray-6;
+
+    .vertical-table {
+      th {
+        width: 130px;
+      }
+      td {
+        @include type-colors;
+      }
+    }
+
+    .path-tag {
+      @include path-tag;
+    }
+  }
+}

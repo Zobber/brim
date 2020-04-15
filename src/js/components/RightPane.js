@@ -6,9 +6,6 @@ import React from "react"
 import type {DispatchProps} from "../state/types"
 import type {Space} from "../state/Spaces/types"
 import {XRightPaneExpander} from "./RightPaneExpander"
-import {downloadPcap} from "../flows/downloadPcap"
-import Back from "./icons/back-arrow.svg"
-import Forward from "./icons/forward-arrow.svg"
 import Layout from "../state/Layout"
 import Log from "../models/Log"
 import LogDetails from "../state/LogDetails"
@@ -25,6 +22,7 @@ import Pane, {
 import RightPaneCollapser from "./RightPaneCollapser"
 import Tab from "../state/Tab"
 import dispatchToProps from "../lib/dispatchToProps"
+import HistoryButtons from "./common/HistoryButtons"
 
 type StateProps = {|
   currentLog: Log,
@@ -50,10 +48,6 @@ export default class RightPane extends React.Component<Props, S> {
     this.props.dispatch(Layout.setRightSidebarWidth(Math.min(width, max)))
   }
 
-  onPacketsClick = () => {
-    this.props.dispatch(downloadPcap(this.props.currentLog))
-  }
-
   render() {
     const {prevExists, nextExists, isOpen, width, currentLog} = this.props
 
@@ -70,22 +64,12 @@ export default class RightPane extends React.Component<Props, S> {
         {currentLog && (
           <PaneHeader>
             <Left>
-              <div className="history-buttons">
-                <button
-                  className="panel-button back-button"
-                  disabled={!prevExists}
-                  onClick={() => this.props.dispatch(LogDetails.back())}
-                >
-                  <Back />
-                </button>
-                <button
-                  className="panel-button forward-button"
-                  onClick={() => this.props.dispatch(LogDetails.forward())}
-                  disabled={!nextExists}
-                >
-                  <Forward />
-                </button>
-              </div>
+              <HistoryButtons
+                prevExists={prevExists}
+                nextExists={nextExists}
+                backFunc={() => this.props.dispatch(LogDetails.back())}
+                forwardFunc={() => this.props.dispatch(LogDetails.forward())}
+              />
             </Left>
             <Center>
               <PaneTitle>Log Details</PaneTitle>

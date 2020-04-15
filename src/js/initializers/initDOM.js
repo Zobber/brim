@@ -9,7 +9,7 @@ export default function() {
   appendDivId("measure-layer")
 }
 
-function appendDivId(id) {
+export function appendDivId(id) {
   let div = document.createElement("div")
   div.id = id
   if (document.body) document.body.appendChild(div)

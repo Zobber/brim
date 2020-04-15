@@ -8,12 +8,14 @@ let started = false
 
 export default function(manager: $WindowManager) {
   ipcMain.handle("windows:initialState", (_e, {id}) => {
-    return manager.getWindow(id).state
+    const window = manager.getWindow(id)
+
+    return window.state
   })
 
-  ipcMain.handle("windows:redirect", (e, args) => {
-    BrowserWindow.fromWebContents(e.sender).close()
-    manager.openWindow(args.name, args.params)
+  ipcMain.handle("windows:open", (e, args) => {
+    const id = manager.openWindow(args.name, args.params)
+    manager.updateWindow(id, {state: args.state})
   })
 
   ipcMain.handle("windows:close", () => {

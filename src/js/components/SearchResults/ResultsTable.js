@@ -26,6 +26,8 @@ import buildViewerDimens from "../Viewer/buildViewerDimens"
 import dispatchToProps from "../../lib/dispatchToProps"
 import getEndMessage from "./getEndMessage"
 import menu from "../../electron/menu"
+import invoke from "../../electron/ipc/invoke"
+import ipc from "../../electron/ipc"
 import Layout from "../../state/Layout/actions"
 
 type StateProps = {|
@@ -78,7 +80,7 @@ export default function ResultsTable(props: Props) {
         onClick={() => props.dispatch(viewLogDetail(logs[index]))}
         onDoubleClick={() => {
           props.dispatch(viewLogDetail(logs[index]))
-          props.dispatch(Layout.showRightSidebar())
+          invoke(ipc.windows.open("detail", {}, props.state))
         }}
         rightClick={menu.fieldContextMenu(
           props.program,
@@ -131,7 +133,8 @@ function stateToProps(state: State) {
     selectedLog: LogDetails.build(state),
     logs: Viewer.getLogs(state),
     program: SearchBar.getSearchProgram(state),
-    space: Tab.space(state)
+    space: Tab.space(state),
+    state
   }
 }
 

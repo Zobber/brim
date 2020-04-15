@@ -9,7 +9,7 @@ import {isBoolean} from "../../lib/is"
 import brim from "../../brim"
 import tron from "./"
 
-export type WindowName = "search" | "about"
+export type WindowName = "search" | "about" | "detail"
 export type $WindowManager = ReturnType<typeof windowManager>
 
 export type WindowsState = {[string]: WindowState}
@@ -67,7 +67,7 @@ export default function windowManager() {
       return windows[id]
     },
 
-    openWindow(name: WindowName, winParams: $Shape<WindowParams> = {}) {
+    openWindow(name: WindowName, winParams: $Shape<WindowParams> = {}): string {
       let params = defaultWindowParams(winParams)
       let id = params.id
 
@@ -81,6 +81,8 @@ export default function windowManager() {
         })
 
       windows[id] = {ref, name, lastFocused: new Date().getTime()}
+
+      return id
     },
 
     openAbout() {

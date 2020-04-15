@@ -5,15 +5,20 @@ import type {
   WindowsCloseMsg,
   WindowsDestroyMsg,
   WindowsInitialStateMsg,
-  WindowsRedirectMsg
+  WindowsOpenMsg
 } from "../types"
 
 export default {
-  redirect(name: WindowName, params: $Shape<WindowParams>): WindowsRedirectMsg {
+  open(
+    name: WindowName,
+    params: $Shape<WindowParams>,
+    state: Object
+  ): WindowsOpenMsg {
     return {
-      channel: "windows:redirect",
+      channel: "windows:open",
       name,
-      params
+      params,
+      state
     }
   },
   close(): WindowsCloseMsg {

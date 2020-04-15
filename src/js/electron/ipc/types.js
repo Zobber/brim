@@ -3,17 +3,18 @@ import type {WindowName} from "../tron/windowManager"
 import type {WindowParams} from "../tron/window"
 
 export type IpcMsg =
-  | WindowsRedirectMsg
+  | WindowsOpenMsg
   | WindowsCloseMsg
   | WindowsInitialStateMsg
   | WindowsDestroyMsg
   | GlobalStoreInitMsg
   | GlobalStoreDispatchMsg
 
-export type WindowsRedirectMsg = {
-  channel: "windows:redirect",
+export type WindowsOpenMsg = {
+  channel: "windows:open",
   name: WindowName,
-  params: WindowParams
+  params: WindowParams,
+  data: Object
 }
 
 export type WindowsCloseMsg = {
