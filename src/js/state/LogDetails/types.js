@@ -38,3 +38,7 @@ export type LOG_DETAIL_BACK = {
 export type LOG_DETAIL_FORWARD = {
   type: "LOG_DETAIL_FORWARD"
 }
+
+export type LOG_DETAIL_CLEAR = {
+  type: "LOG_DETAIL_CLEAR"
+}

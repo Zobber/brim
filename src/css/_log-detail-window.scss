@@ -1,25 +1,60 @@
 #detail-root {
-  position: relative;
   height: 100%;
+  width: 100%;
 }
 
 .log-detail-window {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
 
+  .pane-header {
+    background: #f0f0f0;
+    border-bottom: 1px solid #dbdbdb;
+  }
 
-  .log-detail-body {
-    color: $gray-6;
+  .packets-button .toolbar-button svg {
+    stroke: none;
+    fill: $brand-blue-light;
+  }
 
-    .vertical-table {
-      th {
-        width: 130px;
+  .log-detail-container {
+    height: 100%;
+    overflow: hidden;
+
+    .log-detail-body-wrapper {
+      height: 100%;
+      position: relative;
+
+      .log-detail-body {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow-y: scroll;
+        color: #484c58;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & > div {
+          width: 100%;
+        }
+
+        .vertical-table {
+          th {
+            width: 130px;
+          }
+
+          td {
+            @include type-colors;
+          }
+        }
+
+        .path-tag {
+          @include path-tag;
+        }
       }
-      td {
-        @include type-colors;
-      }
-    }
-
-    .path-tag {
-      @include path-tag;
     }
   }
 }

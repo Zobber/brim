@@ -7,21 +7,18 @@ export type WindowParams = {
   size: [number, number],
   position?: [number, number],
   query: Object,
-  id: string
+  id: string,
+  index: number
 }
 
-export default function window(
-  name: WindowName,
-  params: WindowParams,
-  data: ?Object
-) {
+export default function window(name: WindowName, params: WindowParams) {
   switch (name) {
     case "search":
       return searchWindow(params)
     case "about":
       return aboutWindow()
     case "detail":
-      return detailWindow(params, data)
+      return detailWindow(params)
     default:
       throw new Error(`Unknown window name: ${name}`)
   }
@@ -75,7 +72,7 @@ function aboutWindow() {
 }
 
 function detailWindow(params) {
-  let {size, position, query, id} = params
+  let {size, position, query, id, index} = params
   let win = new BrowserWindow({
     resizable: true,
     width: 360,
@@ -94,7 +91,7 @@ function detailWindow(params) {
   }
 
   // win.setMenu(null)
-  win.loadFile("detail.html", {query: {...query, id}})
+  win.loadFile("detail.html", {query: {...query, id, index}})
 
   return win
 }

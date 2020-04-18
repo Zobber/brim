@@ -8,10 +8,9 @@ import FieldsPanel from "../LogDetails/FieldsPanel"
 import LogDetails from "../../state/LogDetails"
 import UidPanel from "../LogDetails/UidPanel"
 import {Center, Left, PaneHeader, PaneTitle, Right} from "../Pane"
-import {reactElementProps} from "../../test/integration"
 import Tab from "../../state/Tab"
-import {downloadPcap} from "../../flows/downloadPcap"
 import HistoryButtons from "../common/HistoryButtons"
+import PacketsButton from "../PacketsButton"
 
 export default function LogDetailsWindow() {
   let dispatch = useDispatch()
@@ -19,12 +18,6 @@ export default function LogDetailsWindow() {
   const nextExists = useSelector(LogDetails.getHistory).nextExists()
   const log = useSelector(LogDetails.build)
   const space = useSelector(Tab.space)
-  const packetsAvailable =
-    log && log.isPath("conn") && space && space.packet_support
-
-  function onPacketsClick() {
-    dispatch(downloadPcap(log))
-  }
 
   return (
     <div className="log-detail-window">
@@ -38,25 +31,21 @@ export default function LogDetailsWindow() {
           />
         </Left>
         <Center>
-          <PaneTitle>Log Details</PaneTitle>
+          <PaneTitle>Log details for space: {space.name}</PaneTitle>
         </Center>
         <Right>
-          {packetsAvailable && (
-            <button
-              className="panel-button text"
-              onClick={onPacketsClick}
-              {...reactElementProps("pcapsButton")}
-            >
-              PCAPS
-            </button>
-          )}
+          <PacketsButton label={false} id="detail-window-packets" />
         </Right>
       </PaneHeader>
-      <div className="log-detail-body">
-        <FieldsPanel log={log} />
-        {log.correlationId() && <UidPanel log={log} />}
-        <ConnPanel log={log} />
-        {log.getString("md5") && <Md5Panel log={log} />}
+      <div className="log-detail-container">
+        <div className="log-detail-body-wrapper">
+          <div className="log-detail-body">
+            <FieldsPanel log={log} />
+            {log.correlationId() && <UidPanel log={log} />}
+            <ConnPanel log={log} />
+            {log.getString("md5") && <Md5Panel log={log} />}
+          </div>
+        </div>
       </div>
     </div>
   )

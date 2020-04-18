@@ -1,8 +1,8 @@
 /* @flow */
 
-import {connect} from "react-redux"
+import {connect, useDispatch} from "react-redux"
 import {isEmpty} from "lodash"
-import React from "react"
+import React, {useEffect, useState} from "react"
 
 import type {DispatchProps, State} from "../../state/types"
 import type {Space} from "../../state/Spaces/types"
@@ -26,9 +26,12 @@ import buildViewerDimens from "../Viewer/buildViewerDimens"
 import dispatchToProps from "../../lib/dispatchToProps"
 import getEndMessage from "./getEndMessage"
 import menu from "../../electron/menu"
+import {openLogDetailsWindow} from "../../flows/openLogDetailsWindow"
 import invoke from "../../electron/ipc/invoke"
 import ipc from "../../electron/ipc"
 import Layout from "../../state/Layout/actions"
+import interop from "../../brim/interop"
+import useDoubleClick from "../hooks/useDoubleClick"
 
 type StateProps = {|
   logs: Log[],
@@ -49,6 +52,7 @@ type OwnProps = {|
 type Props = {|...StateProps, ...DispatchProps, ...OwnProps|}
 
 export default function ResultsTable(props: Props) {
+  const [selectedNdx, setSelectedNdx] = useState(0)
   let {logs} = props
   const dimens = buildViewerDimens({
     type: props.tableColumns.showHeader() ? "fixed" : "auto",
@@ -67,6 +71,17 @@ export default function ResultsTable(props: Props) {
     overScan: 1
   })
 
+  const onSingleClick = () => {
+    props.dispatch(viewLogDetail(logs[selectedNdx]))
+  }
+
+  const onDoubleClick = () => {
+    props.dispatch(viewLogDetail(logs[selectedNdx]))
+    props.dispatch(openLogDetailsWindow())
+  }
+
+  const clickHandler = useDoubleClick(onSingleClick, onDoubleClick)
+
   function renderRow(index: number, dimens: ViewerDimens) {
     return (
       <LogRow
@@ -77,10 +92,9 @@ export default function ResultsTable(props: Props) {
         timeZone={props.timeZone}
         highlight={Log.isSame(logs[index], props.selectedLog)}
         dimens={dimens}
-        onClick={() => props.dispatch(viewLogDetail(logs[index]))}
-        onDoubleClick={() => {
-          props.dispatch(viewLogDetail(logs[index]))
-          invoke(ipc.windows.open("detail", {}, props.state))
+        onClick={() => {
+          setSelectedNdx(index)
+          clickHandler()
         }}
         rightClick={menu.fieldContextMenu(
           props.program,
